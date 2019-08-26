@@ -5,11 +5,13 @@ import Axios from 'axios';
 import Navbar from './components/layout/Navbar';
 import Users from './components/users/Users';
 import Search from './components/users/Search';
+import Alert from './components/layout/Alert';
 
 export class App extends Component {
   state = {
     users: [],
-    loading: false
+    loading: false,
+    alert: null
   };
 
   // Search GitHub Users
@@ -24,16 +26,25 @@ export class App extends Component {
   // Clear Users from state
   clearUsers = () => this.setState({ users: [], loading: false });
 
+  // Set Alert
+  setAlert = (msg, type) => {
+    this.setState({ alert: { msg, type } });
+
+    setTimeout(() => this.setState({ alert: null }), 5000);
+  };
+
   render() {
-    const { users, loading } = this.state;
+    const { users, loading, alert } = this.state;
     return (
       <div>
         <Navbar />
         <div className='container'>
+          <Alert alert={alert} />
           <Search
             clearUsers={this.clearUsers}
             searchUsers={this.searchUsers}
             showClear={users.length > 0 ? true : false}
+            setAlert={this.setAlert}
           />
           <Users users={users} loading={loading} />
         </div>
